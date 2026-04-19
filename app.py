@@ -159,45 +159,151 @@ CATEGORY_ICONS = {
     "Others": "📦",
 }
 
+# def categorize_expenses(text: str) -> dict:
+#     text_lower = text.lower()
+#     found_categories = {}
+
+#     for category, keywords in CATEGORIES.items():
+#         score = sum(1 for kw in keywords if kw in text_lower)
+#         if score > 0:
+#             found_categories[category] = score
+
+#     if not found_categories:
+#         found_categories["Food & Groceries"] = 1
+
+#     # Extract amounts — handles ₹60, Rs.60, 60.00 formats
+#     amounts = re.findall(
+#         r'(?:₹|rs\.?|inr)?\s*(\d{1,6}(?:,\d{3})*(?:\.\d{1,2})?)',
+#         text_lower
+#     )
+#     # Filter out noise (dates, bill numbers, quantities)
+#     valid_amounts = []
+#     for a in amounts:
+#         val = float(a.replace(',', ''))
+#         if 5 <= val <= 100000:  # reasonable bill amount range
+#             valid_amounts.append(val)
+
+#     # Take the largest amount as total (usually the grand total)
+#     total = max(valid_amounts) if valid_amounts else 0
+
+#     # Distribute proportionally across categories
+#     total_score = sum(found_categories.values())
+#     category_breakdown = {}
+#     for cat, score in found_categories.items():
+#         proportion = score / total_score
+#         category_breakdown[cat] = round(total * proportion, 2)
+
+#     return {
+#         "raw_text": text,
+#         "total_detected": total,
+#         "categories": category_breakdown,
+#         "amounts_found": [str(a) for a in valid_amounts],
+#     }
+
 def categorize_expenses(text: str) -> dict:
     text_lower = text.lower()
-    found_categories = {}
-
-    for category, keywords in CATEGORIES.items():
-        score = sum(1 for kw in keywords if kw in text_lower)
-        if score > 0:
-            found_categories[category] = score
-
-    if not found_categories:
-        found_categories["Food & Groceries"] = 1
-
-    # Extract amounts — handles ₹60, Rs.60, 60.00 formats
-    amounts = re.findall(
-        r'(?:₹|rs\.?|inr)?\s*(\d{1,6}(?:,\d{3})*(?:\.\d{1,2})?)',
+ 
+    # ── Step 1: Find the TOTAL amount smartly ────────────────────────────────
+    # First try to find explicit total/grand total line
+    total = 0.0
+ 
+    # Pattern 1: "total ₹514.50" or "total: 514.50" or "TOTAL ₹ 514.50"
+    total_match = re.search(
+        r'(?:grand\s+)?total[^\d]{0,10}(?:₹|rs\.?)?\s*([\d,]+\.?\d*)',
         text_lower
     )
-    # Filter out noise (dates, bill numbers, quantities)
-    valid_amounts = []
-    for a in amounts:
-        val = float(a.replace(',', ''))
-        if 5 <= val <= 100000:  # reasonable bill amount range
-            valid_amounts.append(val)
-
-    # Take the largest amount as total (usually the grand total)
-    total = max(valid_amounts) if valid_amounts else 0
-
-    # Distribute proportionally across categories
-    total_score = sum(found_categories.values())
+    if total_match:
+        try:
+            total = float(total_match.group(1).replace(',', ''))
+        except:
+            total = 0.0
+ 
+    # Pattern 2: "amount payable", "net amount", "bill amount"
+    if total == 0.0:
+        payable_match = re.search(
+            r'(?:amount\s+payable|net\s+amount|bill\s+amount|payable)[^\d]{0,10}(?:₹|rs\.?)?\s*([\d,]+\.?\d*)',
+            text_lower
+        )
+        if payable_match:
+            try:
+                total = float(payable_match.group(1).replace(',', ''))
+            except:
+                total = 0.0
+ 
+    # Pattern 3: fallback — find all currency amounts and take the LARGEST
+    # (Grand total is almost always the largest number on a bill)
+    if total == 0.0:
+        # Only match numbers preceded by ₹ or Rs to avoid picking up dates/ids
+        currency_amounts = re.findall(
+            r'(?:₹|rs\.?)\s*([\d,]+\.?\d*)',
+            text_lower
+        )
+        valid = []
+        for a in currency_amounts:
+            try:
+                val = float(a.replace(',', ''))
+                if 10 <= val <= 500000:
+                    valid.append(val)
+            except:
+                pass
+        if valid:
+            total = max(valid)
+ 
+    # Pattern 4: last resort — any number that looks like a total
+    if total == 0.0:
+        all_amounts = re.findall(r'(\d{1,6}(?:,\d{3})*\.\d{2})', text_lower)
+        valid = []
+        for a in all_amounts:
+            try:
+                val = float(a.replace(',', ''))
+                if 10 <= val <= 500000:
+                    valid.append(val)
+            except:
+                pass
+        if valid:
+            total = max(valid)
+ 
+    # ── Step 2: Categorize based on keywords ─────────────────────────────────
+    found_categories = {}
+ 
+    # Use word-boundary style matching to avoid false positives
+    # e.g. "bill" in "billing" or "rate" matching "restaurant"
+    noise_words = {'bill', 'total', 'rate', 'amount', 'date', 'invoice',
+                   'description', 'qty', 'cgst', 'sgst', 'igst', 'gst'}
+ 
+    for category, keywords in CATEGORIES.items():
+        score = 0
+        for kw in keywords:
+            if kw in noise_words:
+                continue  # skip generic words that match everything
+            if kw in text_lower:
+                score += 1
+        if score > 0:
+            found_categories[category] = score
+ 
+    if not found_categories:
+        found_categories["Food & Groceries"] = 1
+ 
+    # ── Step 3: Assign full total to the DOMINANT category ───────────────────
+    # Instead of splitting proportionally (which gives wrong numbers),
+    # assign 100% to the top category, and note others as secondary
+    top_category = max(found_categories, key=found_categories.get)
+ 
     category_breakdown = {}
-    for cat, score in found_categories.items():
-        proportion = score / total_score
-        category_breakdown[cat] = round(total * proportion, 2)
-
+    if len(found_categories) == 1:
+        category_breakdown[top_category] = round(total, 2)
+    else:
+        # Give dominant category the bulk, distribute remainder
+        total_score = sum(found_categories.values())
+        for cat, score in found_categories.items():
+            proportion = score / total_score
+            category_breakdown[cat] = round(total * proportion, 2)
+ 
     return {
         "raw_text": text,
-        "total_detected": total,
+        "total_detected": round(total, 2),
         "categories": category_breakdown,
-        "amounts_found": [str(a) for a in valid_amounts],
+        "amounts_found": [str(total)],
     }
 
 # ── 3 BUCKET RECOMMENDATION ───────────────────────────────────────────────────
