@@ -9,9 +9,8 @@ pinned: false
 
 # 🌱 NiveshSaathi — पैसा बढ़ाओ | AI Investment Advisor for Bharat
 
-> *"Har Indian deserves financial guidance — not just the rich ones."*
+> *"Small income, big dreams - let your money grow smartly."*
 
----
 
 ## 💡 The Idea — Why I Built This
 
@@ -21,6 +20,12 @@ I built **NiveshSaathi** (meaning "Investment Friend" in Hindi) because I wanted
 
 No jargon. No complicated forms. Just simple Hindi guidance, like a friend who happens to know finance.
 
+---
+**Live App:** https://huggingface.co/spaces/d-riti/NiveshSaathi  
+
+## 🎥 Demo Video
+
+[▶️ Watch the Demo](https://drive.google.com/file/d/1-uVGzw_dZfFTQp8whfjcU-EQU4XxI84z/view?usp=sharing)
 ---
 
 ## 🎯 What This App Does
@@ -39,6 +44,20 @@ Based on your income and expenses, the app suggests splitting savings into 3 buc
 
 **4. WhatsApp Alerts (Twilio)**
 When you overspend your budget or a category spikes suddenly, you get a WhatsApp message in Hindi — not an email nobody reads, but a WhatsApp message that actually reaches you.
+> ⚠️ **WhatsApp Notifications (Important Limitation)**
+>
+> NiveshSaathi currently uses Twilio’s **WhatsApp Sandbox**, which has a limitation:
+>
+> 👉 Notifications are sent **only to phone numbers that have joined the sandbox manually**.
+>
+> This means:
+>
+> * You must register your number first using the Twilio sandbox join code
+> * Only registered numbers will receive alerts
+>
+> This is perfect for demos and hackathons.
+> For real-world deployment, this would be upgraded to **Twilio WhatsApp Business API** for sending messages to any user.
+
 
 **5. Hindi Q&A with AI (RAG System)**
 Ask anything in Hindi — "RD kya hota hai?", "Post Office mein paisa kaise lagayen?", "Tax kaise bachate hain?" — and get a real answer in simple Hindi, powered by Groq's free Llama 3.
