@@ -16,7 +16,7 @@ pinned: false
 
 India has over 500 million people earning below ₹20,000 a month — daily wage workers, small shopkeepers, teachers, auto drivers. These people work hard, but nobody ever taught them how to save or invest. A financial advisor? That's only for people with lakhs. A bank app? Too complicated, all in English.
 
-I built **NiveshSaathi** (meaning "Investment Friend" in Hindi) because I wanted to change that. The idea is simple — what if a daily wage worker could just click a photo of their grocery bill, and the app automatically figures out where their money is going, tells them how much they can save, and sends them a WhatsApp message when they're overspending?
+I built **NiveshSaathi** (meaning "Investment Friend" in Hindi) because I wanted to change that. The idea is simple — what if a daily wage worker could just click a photo of their electricity bill, and the app automatically figures out where their money is going, tells them how much they can save, and sends them a WhatsApp message when they're overspending?
 
 No jargon. No complicated forms. Just simple Hindi guidance, like a friend who happens to know finance.
 
