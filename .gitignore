@@ -1,0 +1,43 @@
+# ─── Secrets — NEVER commit these ────────────────────────────────────────────
+.env
+*.env
+.env.*
+!.env.example
+
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+venv/
+env/
+.venv/
+
+# ─── Database (auto-recreated on startup) ─────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ─── ChromaDB (auto-recreated on startup) ─────────────────────────────────────
+rag_db/
+
+# ─── GAN cache — DO NOT ignore these, we need them on HuggingFace ─────────────
+# static/gan_cache/*.png   ← intentionally NOT ignored
+
+# ─── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── IDEs ─────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
