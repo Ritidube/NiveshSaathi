@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>पैसा बढ़ाओ | Visual Investment Starter</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --green:  #1a7c4f;
+    --green2: #25a46a;
+    --gold:   #e8a020;
+    --gold2:  #f5c842;
+    --cream:  #fdf6e3;
+    --orange: #e85d20;
+    --dark:   #1a2e1a;
+    --card:   #ffffff;
+    --border: #d4e8d0;
+    --text:   #2c3e2c;
+    --muted:  #6a8a6a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Baloo 2', 'Noto Sans Devanagari', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green2) 60%, var(--gold) 100%);
+    padding: 18px 20px 14px;
+    text-align: center;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 3px 20px rgba(26,124,79,0.3);
+  }
+  header h1 {
+    font-size: 1.6rem; font-weight: 800; color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    letter-spacing: -0.5px;
+  }
+  header p { color: rgba(255,255,255,0.88); font-size: 0.82rem; margin-top: 2px; }
+  .offline-badge {
+    display: inline-block; background: var(--gold2); color: var(--dark);
+    font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+    margin-top: 4px;
+  }
+
+  /* ── NAV TABS ── */
+  nav {
+    display: flex; overflow-x: auto; gap: 0;
+    background: var(--dark); scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  nav button {
+    flex: 1; min-width: 70px; padding: 11px 6px;
+    background: none; border: none; color: rgba(255,255,255,0.6);
+    font-family: inherit; font-size: 0.75rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    border-bottom: 3px solid transparent;
+  }
+  nav button.active {
+    color: var(--gold2); border-bottom-color: var(--gold2);
+    background: rgba(255,255,255,0.07);
+  }
+  nav button .tab-icon { display: block; font-size: 1.2rem; margin-bottom: 2px; }
+
+  /* ── PAGES ── */
+  .page { display: none; padding: 16px; max-width: 480px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--card); border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(26,46,26,0.08);
+    padding: 18px; margin-bottom: 14px;
+    border: 1px solid var(--border);
+  }
+  .card-title {
+    font-size: 1rem; font-weight: 700; color: var(--green);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+
+  /* ── PROFILE SETUP ── */
+  .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .input-group label {
+    display: block; font-size: 0.75rem; font-weight: 600;
+    color: var(--muted); margin-bottom: 4px; text-transform: uppercase;
+  }
+  .input-group input, .input-group select {
+    width: 100%; padding: 10px 12px;
+    border: 2px solid var(--border); border-radius: 10px;
+    font-family: inherit; font-size: 0.9rem; color: var(--text);
+    background: #f8fdf8; transition: border 0.2s;
+  }
+  .input-group input:focus, .input-group select:focus {
+    outline: none; border-color: var(--green2);
+  }
+  .input-group.full { grid-column: 1/-1; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: block; width: 100%; padding: 13px;
+    border: none; border-radius: 12px; cursor: pointer;
+    font-family: inherit; font-size: 1rem; font-weight: 700;
+    transition: all 0.18s; text-align: center;
+  }
+  .btn-green {
+    background: linear-gradient(135deg, var(--green), var(--green2));
+    color: #fff; box-shadow: 0 4px 15px rgba(26,124,79,0.35);
+  }
+  .btn-green:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,124,79,0.4); }
+  .btn-green:active { transform: translateY(0); }
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: var(--dark); box-shadow: 0 4px 15px rgba(232,160,32,0.35);
+  }
+  .btn-outline {
+    background: none; border: 2px solid var(--green2); color: var(--green);
+    margin-top: 8px;
+  }
+
+  /* ── SCAN PAGE ── */
+  .upload-zone {
+    border: 3px dashed var(--green2); border-radius: 16px;
+    padding: 32px 20px; text-align: center; cursor: pointer;
+    background: linear-gradient(135deg, #f0faf4, #e8f5f0);
+    transition: all 0.2s; margin-bottom: 14px;
+  }
+  .upload-zone:hover { border-color: var(--green); background: #e4f5ec; }
+  .upload-zone .icon { font-size: 3rem; margin-bottom: 8px; }
+  .upload-zone p { color: var(--muted); font-size: 0.88rem; }
+  .upload-zone strong { color: var(--green); font-size: 1rem; display: block; }
+  #bill-input { display: none; }
+  
+  .bill-preview {
+    width: 100%; border-radius: 12px; max-height: 200px;
+    object-fit: cover; display: none; margin-bottom: 10px;
+  }
+  
+  .ocr-result {
+    background: #f0faf4; border-radius: 10px; padding: 12px;
+    font-size: 0.82rem; color: var(--text); border-left: 4px solid var(--green2);
+    margin-bottom: 12px; display: none;
+  }
+
+  /* ── CATEGORY CHIPS ── */
+  .category-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cat-chip {
+    padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .cat-food     { background: #fff3e0; color: #e65100; }
+  .cat-utility  { background: #e3f2fd; color: #1565c0; }
+  .cat-transport{ background: #f3e5f5; color: #6a1b9a; }
+  .cat-health   { background: #fce4ec; color: #c62828; }
+  .cat-edu      { background: #e8f5e9; color: #2e7d32; }
+  .cat-telecom  { background: #e0f7fa; color: #006064; }
+  .cat-other    { background: #f5f5f5; color: #424242; }
+
+  /* ── BUCKET CARDS ── */
+  .bucket {
+    border-radius: 14px; padding: 16px; margin-bottom: 12px;
+    position: relative; overflow: hidden;
+  }
+  .bucket-rd     { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border: 2px solid #a5d6a7; }
+  .bucket-gold   { background: linear-gradient(135deg, #fff8e1, #ffecb3); border: 2px solid #ffe082; }
+  .bucket-emer   { background: linear-gradient(135deg, #fce4ec, #f8bbd0); border: 2px solid #f48fb1; }
+  
+  .bucket-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .bucket-name { font-size: 1rem; font-weight: 700; }
+  .bucket-amount { font-size: 1.3rem; font-weight: 800; color: var(--green); }
+  .bucket-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 10px; }
+  .bucket-compare {
+    font-size: 0.75rem; background: rgba(255,255,255,0.7);
+    padding: 4px 10px; border-radius: 20px; display: inline-block; font-weight: 600;
+  }
+  .growth-row { display: flex; gap: 8px; margin-top: 10px; }
+  .growth-pill {
+    flex: 1; background: rgba(255,255,255,0.8); border-radius: 8px;
+    padding: 6px 4px; text-align: center; font-size: 0.75rem;
+  }
+  .growth-pill strong { display: block; font-size: 0.9rem; color: var(--green); }
+
+  /* ── PLANT VISUAL ── */
+  .plant-container {
+    background: linear-gradient(180deg, #e8f5e9 0%, #c8e6c9 100%);
+    border-radius: 16px; padding: 24px; text-align: center;
+    margin-bottom: 14px; border: 2px solid #a5d6a7;
+  }
+  #plant-svg-area { margin: 0 auto; display: block; }
+  .plant-caption { font-size: 0.9rem; color: var(--green); font-weight: 600; margin-top: 10px; }
+  .plant-sub { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+
+  /* ── CHARTS ── */
+  canvas { width: 100% !important; border-radius: 10px; }
+  .chart-wrap { background: #fff; border-radius: 12px; padding: 12px; margin-bottom: 14px; border: 1px solid var(--border); }
+  .chart-title { font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .market-card {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px; background: #f8fdf8; border-radius: 10px;
+    margin-bottom: 8px; border: 1px solid var(--border);
+  }
+  .market-name { font-size: 0.88rem; font-weight: 600; }
+  .market-price { font-size: 1rem; font-weight: 700; }
+  .market-change { font-size: 0.8rem; font-weight: 600; }
+  .up { color: var(--green2); }
+  .down { color: var(--orange); }
+
+  /* ── LEARN PAGE ── */
+  .lesson-card {
+    background: var(--card); border-radius: 14px; padding: 16px;
+    margin-bottom: 12px; border-left: 5px solid var(--gold);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .lesson-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .lesson-body { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+  .analogy {
+    background: #fff8e1; border-radius: 8px; padding: 10px;
+    margin-top: 8px; font-size: 0.8rem; border: 1px solid #ffe082;
+    font-style: italic; color: #5d4037;
+  }
+
+  /* ── UPI SIMULATE ── */
+  .upi-form { display: grid; gap: 10px; }
+  .upi-success {
+    background: #e8f5e9; border: 2px solid var(--green2); border-radius: 12px;
+    padding: 16px; text-align: center; display: none;
+  }
+  .upi-success .tick { font-size: 2.5rem; }
+  .upi-success p { color: var(--green); font-weight: 700; margin-top: 6px; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar {
+    height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden;
+    margin-top: 6px;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 4px;
+    background: linear-gradient(90deg, var(--green), var(--green2));
+    transition: width 1s ease;
+  }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px);
+    background: var(--dark); color: #fff; padding: 10px 20px; border-radius: 24px;
+    font-size: 0.85rem; font-weight: 600; z-index: 999; transition: transform 0.3s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3); pointer-events: none;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── LOADING ── */
+  .loading { text-align: center; padding: 20px; color: var(--muted); font-size: 0.88rem; }
+  .spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--green2); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── RD SLIDER ── */
+  input[type="range"] {
+    width: 100%; accent-color: var(--green); margin: 6px 0;
+  }
+  .rd-display { text-align: center; margin: 10px 0; }
+  .rd-display .big { font-size: 1.8rem; font-weight: 800; color: var(--green); }
+  .rd-display .label { font-size: 0.78rem; color: var(--muted); }
+
+  /* Responsive */
+  @media(max-width: 360px) {
+    header h1 { font-size: 1.3rem; }
+    .bucket-amount { font-size: 1.1rem; }
+  }
+
+.quick-q {
+  padding:6px 12px; border-radius:20px; font-size:0.78rem; font-weight:600;
+  border:2px solid var(--green2); color:var(--green); background:#f0faf4;
+  cursor:pointer; font-family:inherit; transition:all 0.15s;
+}
+.quick-q:hover { background:var(--green2); color:#fff; }
+.chat-msg { display:flex; gap:10px; margin-bottom:12px; align-items:flex-start; }
+.bot-msg { flex-direction:row; }
+.user-msg { flex-direction:row-reverse; }
+.msg-avatar {
+  width:36px; height:36px; border-radius:50%; display:flex;
+  align-items:center; justify-content:center; font-size:1.2rem;
+  flex-shrink:0; background:#e8f5e9;
+}
+.user-msg .msg-avatar { background:#e3f2fd; }
+.msg-bubble {
+  max-width:80%; padding:10px 14px; border-radius:16px;
+  font-size:0.85rem; line-height:1.6;
+}
+.bot-msg .msg-bubble { background:#f0faf4; color:var(--text); border-bottom-left-radius:4px; }
+.user-msg .msg-bubble { background:var(--green); color:#fff; border-bottom-right-radius:4px; }
+.source-chip {
+  display:inline-block; background:rgba(26,124,79,0.1); border-radius:10px;
+  padding:2px 8px; font-size:0.68rem; margin-top:6px; margin-right:4px; color:var(--muted);
+}
+.typing-dots { display:inline-flex; gap:4px; padding:4px 0; }
+.typing-dots span {
+  width:8px; height:8px; border-radius:50%; background:var(--muted);
+  animation:bounce 1.2s infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay:0.2s; }
+.typing-dots span:nth-child(3) { animation-delay:0.4s; }
+@keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-8px)} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌱 पैसा बढ़ाओ</h1>
+  <p>Visual Investment Starter · For Real People</p>
+  <span class="offline-badge">📶 Works Offline Too</span>
+</header>
+
+<nav>
+  <button class="active" onclick="showPage('home')"><span class="tab-icon">🏠</span>Home</button>
+  <button onclick="showPage('scan')"><span class="tab-icon">📷</span>Scan</button>
+  <button onclick="showPage('buckets')"><span class="tab-icon">🪣</span>Buckets</button>
+  <button onclick="showPage('grow')"><span class="tab-icon">🌳</span>Grow</button>
+  <button onclick="showPage('market')"><span class="tab-icon">📈</span>Market</button>
+  <button onclick="showPage('learn')"><span class="tab-icon">📚</span>Learn</button>
+  <button onclick="showPage('chat')"><span class="tab-icon">🤖</span>AI Chat</button>
+</nav>
+
+<!-- ═══════════════════ HOME ═══════════════════ -->
+<div class="page active" id="page-home">
+  <div class="card">
+    <div class="card-title">👋 आपका स्वागत है!</div>
+    <div class="profile-grid">
+      <div class="input-group">
+        <label>आपका नाम</label>
+        <input type="text" id="user-name" placeholder="जैसे: Ravi Kumar" value="Ravi Kumar"/>
+      </div>
+      <div class="input-group">
+        <label>Profession</label>
+        <select id="user-prof">
+          <option value="teacher">Teacher 👨‍🏫</option>
+          <option value="daily_wage">Daily Wage 🔨</option>
+          <option value="shopkeeper">Shopkeeper 🏪</option>
+          <option value="default">Other</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Monthly Income (₹)</label>
+        <input type="number" id="user-income" placeholder="15000" value="15000"/>
+      </div>
+      <div class="input-group">
+        <label>Monthly Expenses (₹)</label>
+        <input type="number" id="user-expenses" placeholder="11000" value="11000"/>
+      </div>
+      <div class="input-group full">
+        <label>City / Town</label>
+        <input type="text" id="user-city" placeholder="जैसे: Muzaffarnagar, UP" value="Muzaffarnagar"/>
+      </div>
+    </div>
+    <button class="btn btn-green" onclick="saveProfile()" style="margin-top:12px">
+      शुरू करें — Let's Start! 🚀
+    </button>
+  </div>
+
+  <div class="card" id="home-summary" style="display:none">
+    <div class="card-title">📊 आपकी Summary</div>
+    <div id="summary-content"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ Quick Actions</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <button class="btn btn-green" onclick="showPage('scan')" style="font-size:0.85rem">
+        📷 Bill Scan करो
+      </button>
+      <button class="btn btn-gold" onclick="showPage('buckets')" style="font-size:0.85rem">
+        🪣 3 Buckets देखो
+      </button>
+      <button class="btn btn-outline" onclick="showPage('grow')" style="font-size:0.85rem">
+        🌳 Growth देखो
+      </button>
+      <button class="btn btn-outline" onclick="showPage('learn')" style="font-size:0.85rem">
+        📚 Stocks सीखो
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ SCAN ═══════════════════ -->
+<div class="page" id="page-scan">
+  <div class="card">
+    <div class="card-title">📷 Bill Scan करें</div>
+    <p style="font-size:0.82rem; color:var(--muted); margin-bottom:12px">
+      किसी भी बिल की फोटो लें — दुकान, बिजली, दवाई। हम खुद categorize करेंगे।
+    </p>
+    <div class="upload-zone" onclick="document.getElementById('bill-input').click()">
+      <div class="icon">📸</div>
+      <strong>Tap to take photo or upload</strong>
+      <p>Hindi + English bills supported</p>
+    </div>
+    <input type="file" id="bill-input" accept="image/*" capture="environment" onchange="handleBillScan(event)"/>
+    
+    <img id="bill-preview" class="bill-preview"/>
+    <div id="ocr-text" class="ocr-result"></div>
+    
+    <button class="btn btn-green" id="scan-btn" style="display:none" onclick="processBill()">
+      🔍 Analyze करें
+    </button>
+  </div>
+
+  <div id="category-result" style="display:none">
+    <div class="card">
+      <div class="card-title">🏷️ Expense Categories</div>
+      <div id="total-display" style="text-align:center; margin-bottom:14px">
+        <div style="font-size:2rem; font-weight:800; color:var(--green)" id="total-amt">₹0</div>
+        <div style="font-size:0.8rem; color:var(--muted)">Total Detected</div>
+      </div>
+      <div class="category-list" id="cat-chips"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">💡 Saving Tip</div>
+      <p id="saving-tip" style="font-size:0.88rem; color:var(--muted); line-height:1.6"></p>
+      <button class="btn btn-green" style="margin-top:12px" onclick="showPage('buckets')">
+        → अपना Investment Plan देखें
+      </button>
+    </div>
+  </div>
+
+  <div id="scan-loading" class="loading" style="display:none">
+    <div class="spinner"></div>
+    <p style="margin-top:10px">Bill scan हो रहा है... 🔍</p>
+  </div>
+
+  <!-- ═══════════════ MANUAL EXPENSE ENTRY ═══════════════ -->
+  <div class="card">
+    <div class="card-title">✏️ Expense Manually Add करें</div>
+    <p style="font-size:0.82rem; color:var(--muted); margin-bottom:12px">
+      अगर bill scan नहीं कर पा रहे, तो manually expense add करें।
+    </p>
+    
+    <div class="input-group" style="margin-bottom:10px">
+      <label>Category चुनें</label>
+      <select id="manual-category">
+        <option value="Food & Groceries">🍛 Food & Groceries</option>
+        <option value="Utilities">💡 Utilities (बिजली, पानी)</option>
+        <option value="Transport">🚗 Transport</option>
+        <option value="Healthcare">💊 Healthcare</option>
+        <option value="Education">📖 Education</option>
+        <option value="Telecom">📱 Telecom (मोबाइल)</option>
+        <option value="Entertainment">🎬 Entertainment</option>
+        <option value="Others">📦 Others</option>
+      </select>
+    </div>
+
+    <div class="input-group" style="margin-bottom:10px">
+      <label>Amount (₹)</label>
+      <input type="number" id="manual-amount" placeholder="500" min="1" step="0.01"/>
+    </div>
+
+    <div class="input-group" style="margin-bottom:12px">
+      <label>Description (Optional)</label>
+      <input type="text" id="manual-description" placeholder="जैसे: Kapde kharide market se"/>
+    </div>
+
+    <button class="btn btn-green" onclick="addManualExpense()">
+      ➕ Add Expense
+    </button>
+  </div>
+
+  <div id="manual-result" style="display:none">
+    <div class="card" style="background:#e8f5e9; border-color:#25a46a">
+      <div style="text-align:center">
+        <div style="font-size:2.5rem; margin-bottom:8px">✅</div>
+        <div style="font-size:1.1rem; font-weight:700; color:var(--green); margin-bottom:6px">
+          Expense Added Successfully!
+        </div>
+        <p id="manual-summary" style="font-size:0.85rem; color:var(--muted); margin-bottom:8px"></p>
+        <div id="manual-alert" style="font-size:0.82rem; padding:10px; border-radius:8px; margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ WHATSAPP ALERTS SETUP ═══════════════ -->
+  <div class="card">
+    <div class="card-title">📱 WhatsApp Alerts Setup</div>
+    <p style="font-size:0.82rem; color:var(--muted); margin-bottom:12px">
+      Budget exceed होने पर WhatsApp alert चाहिए? अपना number save करें।
+    </p>
+    
+    <div class="input-group" style="margin-bottom:10px">
+      <label>WhatsApp Number (with country code)</label>
+      <div style="display:flex; gap:6px">
+        <input type="text" value="+91" readonly style="width:60px; background:#f0f0f0"/>
+        <input type="tel" id="whatsapp-number" placeholder="9876543210" style="flex:1" maxlength="10"/>
+      </div>
+      <p style="font-size:0.7rem; color:var(--muted); margin-top:4px">
+        Format: +91 के बाद 10 digit number
+      </p>
+    </div>
+
+    <button class="btn btn-outline" onclick="saveWhatsAppNumber()">
+      💾 Save Number
+    </button>
+
+    <div id="whatsapp-status" style="margin-top:10px; padding:10px; border-radius:8px; font-size:0.8rem; display:none">
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ BUCKETS ═══════════════════ -->
+<div class="page" id="page-buckets">
+  <div class="card">
+    <div class="card-title">🪣 3 Bucket Strategy</div>
+    <p style="font-size:0.82rem; color:var(--muted); margin-bottom:8px">
+      अपनी savings को 3 हिस्सों में बाँटो — सुरक्षित, धीरे-धीरे बढ़ता हुआ तरीका।
+    </p>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px">
+      <div style="flex:1; min-width:80px; text-align:center; background:#e8f5e9; border-radius:10px; padding:8px">
+        <div style="font-size:1.4rem">🏦</div>
+        <div style="font-size:0.7rem; font-weight:700; color:var(--green)">10% RD</div>
+      </div>
+      <div style="flex:1; min-width:80px; text-align:center; background:#fff8e1; border-radius:10px; padding:8px">
+        <div style="font-size:1.4rem">✨</div>
+        <div style="font-size:0.7rem; font-weight:700; color:#e8a020">5% Gold</div>
+      </div>
+      <div style="flex:1; min-width:80px; text-align:center; background:#fce4ec; border-radius:10px; padding:8px">
+        <div style="font-size:1.4rem">🆘</div>
+        <div style="font-size:0.7rem; font-weight:700; color:#c62828">Emergency</div>
+      </div>
+    </div>
+    <button class="btn btn-green" onclick="loadBuckets()">मेरा Plan Calculate करें 🧮</button>
+  </div>
+
+  <div id="bucket-loading" class="loading" style="display:none">
+    <div class="spinner"></div>
+    <p style="margin-top:10px">Plan बन रहा है...</p>
+  </div>
+  <div id="bucket-results"></div>
+
+  <!-- RD Calculator -->
+  <div class="card">
+    <div class="card-title">🧮 RD Calculator</div>
+    <div class="input-group">
+      <label>Monthly Amount (₹)</label>
+      <input type="range" id="rd-monthly" min="100" max="5000" step="50" value="500" oninput="updateRD()"/>
+    </div>
+    <div class="rd-display">
+      <div class="big" id="rd-amount-disp">₹500/month</div>
+    </div>
+    <div class="input-group">
+      <label>Duration (Months)</label>
+      <input type="range" id="rd-months" min="3" max="60" step="3" value="12" oninput="updateRD()"/>
+    </div>
+    <div id="rd-result" style="margin-top:10px"></div>
+    <canvas id="rd-chart" height="120"></canvas>
+  </div>
+</div>
+
+<!-- ═══════════════════ GROW ═══════════════════ -->
+<div class="page" id="page-grow">
+  <div class="card">
+    <div class="card-title">🌳 आपका पैसा कैसे बढ़ेगा</div>
+    <p style="font-size:0.82rem; color:var(--muted)">
+      हर महीने छोटी बचत एक बड़े पेड़ की तरह बढ़ती है।
+    </p>
+  </div>
+
+  <div class="plant-container">
+    <div id="gan-image-wrap" style="position:relative;min-height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column">
+      <img id="gan-image" style="width:100%;max-width:300px;border-radius:14px;display:none;box-shadow:0 4px 20px rgba(0,0,0,0.18)" alt="AI Growth Visual"/>
+      <canvas id="plant-svg-area" width="280" height="220"></canvas>
+      <div id="gan-spinner" style="display:none;text-align:center;padding:20px">
+        <div class="spinner" style="width:40px;height:40px;border-width:4px"></div>
+        <p style="color:var(--green);font-size:0.85rem;margin-top:10px;font-weight:600">AI image बन रहा है... 🎨</p>
+        <p style="color:var(--muted);font-size:0.75rem">Stable Diffusion generating...</p>
+      </div>
+    </div>
+    <div class="plant-caption" id="plant-caption">आपकी savings एक बीज की तरह है 🌱</div>
+    <div class="plant-sub" id="plant-sub">हर महीने ₹500 बचाएं और देखें कैसे बढ़ता है</div>
+    <div id="gan-method-badge" style="margin-top:6px;font-size:0.7rem;color:var(--muted)"></div>
+    <button class="btn btn-green" onclick="generateGANImage()" style="margin-top:12px;font-size:0.85rem;padding:10px;max-width:260px;margin-left:auto;margin-right:auto">
+      🎨 AI से Image बनाओ (Stable Diffusion)
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⏰ Time Selector — कितने महीने?</div>
+    <input type="range" id="grow-months" min="1" max="36" value="6" oninput="updatePlant(this.value)"/>
+    <div style="text-align:center; font-size:1rem; font-weight:700; color:var(--green); margin:8px 0" id="months-label">6 Months</div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">📊 Growth Projection (₹)</div>
+    <canvas id="growth-chart" height="150"></canvas>
+  </div>
+</div>
+
+<!-- ═══════════════════ MARKET ═══════════════════ -->
+<div class="page" id="page-market">
+  <div class="card">
+    <div class="card-title">📈 आज का Market</div>
+    <p style="font-size:0.82rem; color:var(--muted); margin-bottom:12px">
+      Live prices — Gold, Nifty, Bank Stock. आपके लिए simple भाषा में।
+    </p>
+    <button class="btn btn-green" onclick="loadMarket()">Refresh करें 🔄</button>
+  </div>
+
+  <div id="market-loading" class="loading" style="display:none">
+    <div class="spinner"></div><p style="margin-top:10px">Loading market data...</p>
+  </div>
+  <div id="market-cards"></div>
+  <div class="chart-wrap" id="market-chart-wrap" style="display:none">
+    <div class="chart-title">📉 Gold Price (30 Days)</div>
+    <canvas id="gold-chart" height="130"></canvas>
+  </div>
+
+  <!-- UPI Simulate -->
+  <div class="card">
+    <div class="card-title">📲 Investment Simulate करें (Demo)</div>
+    <p style="font-size:0.8rem; color:var(--muted); margin-bottom:12px">
+      यह सिर्फ demo है — real money नहीं जाएगा।
+    </p>
+    <div class="upi-form">
+      <div class="input-group">
+        <label>Amount (₹)</label>
+        <input type="number" id="upi-amount" value="500" placeholder="500"/>
+      </div>
+      <div class="input-group">
+        <label>Purpose</label>
+        <select id="upi-purpose">
+          <option>RD Savings</option>
+          <option>Digital Gold</option>
+          <option>Emergency Fund</option>
+        </select>
+      </div>
+      <button class="btn btn-gold" onclick="simulateUPI()">📲 Pay via UPI (Demo)</button>
+    </div>
+    <div class="upi-success" id="upi-success">
+      <div class="tick">✅</div>
+      <p id="upi-msg">Payment Successful!</p>
+      <p style="font-size:0.78rem; color:var(--muted); margin-top:4px">Transaction ID: <span id="upi-txn"></span></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ LEARN ═══════════════════ -->
+<div class="page" id="page-learn">
+  <div class="card">
+    <div class="card-title">📚 Stocks क्या हैं? Simply समझो</div>
+    <p style="font-size:0.82rem; color:var(--muted)">
+      Hindi में, आपकी भाषा में — कोई जटिल शब्द नहीं।
+    </p>
+  </div>
+
+  <div class="lesson-card">
+    <div class="lesson-title">🥇 Gold vs Stock — क्या फर्क है?</div>
+    <div class="lesson-body">
+      Gold सदियों से सुरक्षित है। Stock (share) एक company का हिस्सा खरीदना है।
+      दोनों पैसे बढ़ाते हैं — बस तरीका अलग है।
+    </div>
+    <div class="analogy">
+      💡 जैसे gold ज्वेलरी safe locker में रखते हो, वैसे ही stocks "digital locker" (Demat account) में।
+    </div>
+  </div>
+
+  <div class="lesson-card">
+    <div class="lesson-title">🏦 RD क्यों शुरू करें?</div>
+    <div class="lesson-body">
+      Recurring Deposit = हर महीने एक fixed amount bank में डालो। Bank 6-7% interest देता है। 
+      कोई risk नहीं, guaranteed return।
+    </div>
+    <div class="analogy">
+      💡 जैसे रोज़ 10 रुपए का सिक्का गुल्लक में डालते हो — RD वैसा ही है, पर bank में और interest के साथ।
+    </div>
+  </div>
+
+  <div class="lesson-card">
+    <div class="lesson-title">✨ Digital Gold क्या है?</div>
+    <div class="lesson-body">
+      1 रुपए से भी gold खरीद सकते हो digitally। वही असली सोना है, पर locker की जरूरत नहीं। 
+      Paytm, PhonePe, Google Pay से खरीद सकते हो।
+    </div>
+    <div class="analogy">
+      💡 Festival पर जो सोना खरीदते थे — वही डिजिटल form में। Safer and easier.
+    </div>
+  </div>
+
+  <div class="lesson-card">
+    <div class="lesson-title">📈 Index Fund — Safest Stock</div>
+    <div class="lesson-body">
+      Nifty 50 Index Fund = India की top 50 companies में एक साथ invest करना। 
+      ₹100/month से शुरू। 10-12% average return historically।
+    </div>
+    <div class="analogy">
+      💡 एक company में invest करना = एक दुकान में पैसे लगाना (risky)।
+      Index Fund = पूरे बाज़ार में थोड़ा-थोड़ा (safe)।
+    </div>
+  </div>
+
+  <div class="lesson-card">
+    <div class="lesson-title">⚠️ Emergency Fund क्यों ज़रूरी?</div>
+    <div class="lesson-body">
+      Hospital bill, job जाना, flood, accident — किसी भी time हो सकता है। 
+      3 महीने का खर्च cash में ready रखो। कहीं invest मत करो इसे।
+    </div>
+    <div class="analogy">
+      💡 यह fire extinguisher है। आग नहीं लगी तो बढ़िया — पर रखना ज़रूरी है।
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">📊 ₹500/month — 10 साल में क्या होता है?</div>
+    <canvas id="learn-chart" height="150"></canvas>
+  </div>
+</div>
+
+
+<!-- ═══════════════════ AI CHAT (RAG) ═══════════════════ -->
+<div class="page" id="page-chat">
+  <div class="card">
+    <div class="card-title">🤖 AI Financial Advisor</div>
+    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:10px">
+      Hindi mein koi bhi sawaal poochho — RD, Gold, Tax, Savings!
+    </p>
+    <div style="background:#e3f2fd;border-radius:10px;padding:10px;margin-bottom:4px;font-size:0.75rem;color:#1565c0">
+      💡 Powered by ChromaDB + Groq Llama 3 (RAG AI)
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="font-size:0.88rem;margin-bottom:10px">⚡ Quick Sawaal</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <button class="quick-q" onclick="askQuick('RD kya hota hai?')">RD kya hai?</button>
+      <button class="quick-q" onclick="askQuick('Digital gold mein invest karein?')">Digital Gold?</button>
+      <button class="quick-q" onclick="askQuick('Emergency fund kitna hona chahiye?')">Emergency Fund?</button>
+      <button class="quick-q" onclick="askQuick('Tax bachane ke liye kya karein?')">Tax Bachat?</button>
+      <button class="quick-q" onclick="askQuick('Post office scheme safe hai?')">Post Office?</button>
+      <button class="quick-q" onclick="askQuick('Rs.15000 salary mein investment kaise karein?')">15K Plan?</button>
+    </div>
+  </div>
+  <div id="chat-messages" style="margin-bottom:70px">
+    <div class="chat-msg bot-msg">
+      <div class="msg-avatar">🤖</div>
+      <div class="msg-bubble">
+        Namaste! Main NiveshSaathi ka AI advisor hoon. Hindi mein koi bhi financial sawaal poochho — RD, FD, Digital Gold, Tax, Savings — kuch bhi! 🙏
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;position:sticky;bottom:16px;background:var(--cream);padding-top:8px">
+    <input type="text" id="chat-input"
+      placeholder="Sawaal likhein... jaise: RD kya hai?"
+      style="flex:1;padding:12px;border:2px solid var(--border);border-radius:12px;font-family:inherit;font-size:0.88rem;background:#f8fdf8"
+      onkeypress="if(event.key==='Enter')sendChat()"
+    />
+    <button class="btn btn-green" onclick="sendChat()" style="width:50px;padding:0;font-size:1.3rem;border-radius:12px;flex-shrink:0">➤</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+const state = {
+  income: 15000,
+  expenses: 11000,
+  profession: 'teacher',
+  name: 'Ravi Kumar',
+  scannedTotal: 0,
+  rdChart: null,
+  growthChart: null,
+  goldChart: null,
+  learnChart: null,
+};
+
+const API = window.location.origin;
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const idx = ['home','scan','buckets','grow','market','learn','chat'].indexOf(id);
+  document.querySelectorAll('nav button')[idx].classList.add('active');
+  
+  if (id === 'grow') initGrowPage();
+  if (id === 'market') loadMarket();
+  if (id === 'learn') initLearnChart();
+  if (id === 'buckets') { updateRD(); }
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────────
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── PROFILE ────────────────────────────────────────────────────────────────
+function saveProfile() {
+  state.name      = document.getElementById('user-name').value || 'Friend';
+  state.income    = parseFloat(document.getElementById('user-income').value) || 15000;
+  state.expenses  = parseFloat(document.getElementById('user-expenses').value) || 11000;
+  state.profession= document.getElementById('user-prof').value;
+  
+  const savings   = state.income - state.expenses;
+  const pct       = ((savings / state.income) * 100).toFixed(1);
+  
+  const summary = document.getElementById('home-summary');
+  const content = document.getElementById('summary-content');
+  
+  content.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+      <div style="background:#e8f5e9;border-radius:10px;padding:10px">
+        <div style="font-size:1.1rem;font-weight:800;color:var(--green)">₹${state.income.toLocaleString('en-IN')}</div>
+        <div style="font-size:0.7rem;color:var(--muted)">Income</div>
+      </div>
+      <div style="background:#fce4ec;border-radius:10px;padding:10px">
+        <div style="font-size:1.1rem;font-weight:800;color:#c62828">₹${state.expenses.toLocaleString('en-IN')}</div>
+        <div style="font-size:0.7rem;color:var(--muted)">Expenses</div>
+      </div>
+      <div style="background:#fff8e1;border-radius:10px;padding:10px">
+        <div style="font-size:1.1rem;font-weight:800;color:var(--gold)">₹${savings.toLocaleString('en-IN')}</div>
+        <div style="font-size:0.7rem;color:var(--muted)">Can Save</div>
+      </div>
+    </div>
+    <div style="margin-top:10px">
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:4px">Savings Rate: ${pct}%</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(pct,100)}%"></div></div>
+    </div>
+    <p style="font-size:0.82rem;color:var(--green);margin-top:10px;font-weight:600">
+      ${savings > 2000 ? '🌳 Great! आप invest कर सकते हैं।' : savings > 500 ? '🌱 थोड़ा बचाओ — शुरुआत अच्छी है!' : '💪 कम income में भी ₹100 बचाना शुरू करो!'}
+    </p>
+  `;
+  summary.style.display = 'block';
+  toast(`नमस्ते ${state.name}! 🙏 Profile saved!`);
+}
+
+// ── BILL SCAN ──────────────────────────────────────────────────────────────
+function handleBillScan(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  
+  const preview = document.getElementById('bill-preview');
+  const reader = new FileReader();
+  reader.onload = ev => {
+    preview.src = ev.target.result;
+    preview.style.display = 'block';
+    document.getElementById('scan-btn').style.display = 'block';
+    document.getElementById('ocr-text').style.display = 'none';
+    document.getElementById('category-result').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function processBill() {
+  const fileInput = document.getElementById('bill-input');
+  const file = fileInput.files[0];
+  
+  document.getElementById('scan-loading').style.display = 'block';
+  document.getElementById('scan-btn').style.display = 'none';
+  document.getElementById('category-result').style.display = 'none';
+  
+  try {
+    let data;
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      const resp = await fetch(`${API}/api/scan-bill`, { method: 'POST', body: formData });
+      const json = await resp.json();
+      data = json.data;
+    } else {
+      // Demo mode
+      data = mockCategorization();
+    }
+    
+    showCategoryResult(data);
+  } catch (e) {
+    showCategoryResult(mockCategorization());
+    toast("Demo mode — server unavailable");
+  } finally {
+    document.getElementById('scan-loading').style.display = 'none';
+    document.getElementById('scan-btn').style.display = 'block';
+  }
+}
+
+function mockCategorization() {
+  const samples = [
+    { raw_text: "Grocery Store | Rice ₹300 | Dal ₹120 | Oil ₹180", total_detected: 600, categories: {"Food & Groceries": 600}, amounts_found: ["300","120","180"] },
+    { raw_text: "Electricity Bill ₹850 | Water ₹200", total_detected: 1050, categories: {"Utilities": 1050}, amounts_found: ["850","200"] },
+    { raw_text: "Medical Store | Medicines ₹450", total_detected: 450, categories: {"Healthcare": 450}, amounts_found: ["450"] },
+  ];
+  return samples[Math.floor(Math.random() * samples.length)];
+}
+
+function showCategoryResult(data) {
+  const ocrDiv = document.getElementById('ocr-text');
+  ocrDiv.textContent = '📄 Detected: ' + data.raw_text;
+  ocrDiv.style.display = 'block';
+  
+  document.getElementById('total-amt').textContent = '₹' + (data.total_detected || 0).toLocaleString('en-IN');
+  
+  const classMap = {
+    "Food & Groceries": "cat-food", "Utilities": "cat-utility",
+    "Transport": "cat-transport", "Healthcare": "cat-health",
+    "Education": "cat-edu", "Telecom": "cat-telecom", "Others": "cat-other"
+  };
+  const icons = {
+    "Food & Groceries":"🍛","Utilities":"💡","Transport":"🚗","Healthcare":"💊",
+    "Education":"📖","Telecom":"📱","Others":"📦"
+  };
+  
+  const chipsEl = document.getElementById('cat-chips');
+  chipsEl.innerHTML = '';
+  Object.entries(data.categories || {}).forEach(([cat, amt]) => {
+    const chip = document.createElement('div');
+    chip.className = 'cat-chip ' + (classMap[cat] || 'cat-other');
+    chip.innerHTML = `${icons[cat]||'📦'} ${cat}: ₹${amt}`;
+    chipsEl.appendChild(chip);
+  });
+  
+  // Saving tip
+  const tips = {
+    "Food & Groceries": "💡 Kirana store ka weekly list banao — ₹100-200 bachega!",
+    "Utilities": "💡 LED bulbs lagao — bijli bill ₹150-200 kam hoga!",
+    "Healthcare": "💡 Jan Aushadhi store par generic medicines lene se 50-60% bachta hai.",
+    "Transport": "💡 Monthly pass lene se daily auto se sasta padta hai.",
+    "default": "💡 Yeh expense agar 10% kam karo, to ₹" + Math.round((data.total_detected||500)*0.1) + " bachega har mahine!"
+  };
+  
+  const mainCat = Object.keys(data.categories || {})[0];
+  document.getElementById('saving-tip').textContent = tips[mainCat] || tips.default;
+  
+  state.scannedTotal = data.total_detected || 0;
+  document.getElementById('category-result').style.display = 'block';
+}
+
+// ── BUCKETS ────────────────────────────────────────────────────────────────
+async function loadBuckets() {
+  document.getElementById('bucket-loading').style.display = 'block';
+  document.getElementById('bucket-results').innerHTML = '';
+  
+  try {
+    const resp = await fetch(`${API}/api/recommendations`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        monthly_income: state.income,
+        total_expenses: state.expenses,
+        profession: state.profession
+      })
+    });
+    const json = await resp.json();
+    renderBuckets(json.recommendations, json.visual);
+  } catch(e) {
+    renderBuckets(mockBuckets(), mockVisual());
+  } finally {
+    document.getElementById('bucket-loading').style.display = 'none';
+  }
+}
+
+function mockBuckets() {
+  const savings = state.income - state.expenses;
+  const rd = state.income * 0.10;
+  const gold = state.income * 0.05;
+  return {
+    income: state.income,
+    expenses: state.expenses,
+    savings_possible: savings,
+    buckets: {
+      rd_savings: { name:"Recurring Deposit (RD)", emoji:"🏦", monthly: rd, description:"Fixed monthly savings at your bank!", safe_level:"Very Safe ✅", growth_1yr: rd*12*1.065, growth_3yr: rd*36*1.195, compare:"Safe like Fixed Deposit" },
+      digital_gold: { name:"Digital Gold", emoji:"✨", monthly: gold, description:"Buy gold digitally in tiny amounts!", safe_level:"Safe ✅", growth_1yr: gold*12*1.08, growth_3yr: gold*36*1.26, compare:"Same as physical gold" },
+      emergency_cash: { name:"Emergency Cash", emoji:"🆘", monthly: savings*0.3, description:"Keep ready for sudden needs.", safe_level:"Liquid 💧", growth_1yr: savings*0.3*12, growth_3yr: savings*0.3*36, compare:"In savings account" }
+    },
+    tip: savings > 2000 ? "🌳 Excellent! आप invest करने के लिए तैयार हैं।" : "🌱 ₹100/month से शुरू करो — बड़ा फर्क पड़ता है!"
+  };
+}
+
+function mockVisual() {
+  return { metaphor: `Your ₹${Math.round(state.income*0.10)}/month savings = Growing Plant 🌱`, growth_stage: "sapling" };
+}
+
+function renderBuckets(rec, visual) {
+  const el = document.getElementById('bucket-results');
+  const b = rec.buckets;
+  
+  el.innerHTML = `
+    <div class="card" style="background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border:2px solid var(--green2)">
+      <div style="text-align:center">
+        <div style="font-size:0.8rem;color:var(--muted)">Monthly Savings Possible</div>
+        <div style="font-size:2rem;font-weight:800;color:var(--green)">₹${rec.savings_possible.toLocaleString('en-IN')}</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">${rec.tip}</div>
+      </div>
+    </div>
+    
+    <div class="bucket bucket-rd">
+      <div class="bucket-header">
+        <div class="bucket-name">${b.rd_savings.emoji} ${b.rd_savings.name}</div>
+        <div class="bucket-amount">₹${Math.round(b.rd_savings.monthly)}/mo</div>
+      </div>
+      <div class="bucket-desc">${b.rd_savings.description}</div>
+      <div class="bucket-compare">${b.rd_savings.safe_level} · ${b.rd_savings.compare}</div>
+      <div class="growth-row">
+        <div class="growth-pill"><strong>₹${Math.round(b.rd_savings.growth_1yr).toLocaleString('en-IN')}</strong>1 Year</div>
+        <div class="growth-pill"><strong>₹${Math.round(b.rd_savings.growth_3yr).toLocaleString('en-IN')}</strong>3 Years</div>
+      </div>
+    </div>
+    
+    <div class="bucket bucket-gold">
+      <div class="bucket-header">
+        <div class="bucket-name">${b.digital_gold.emoji} ${b.digital_gold.name}</div>
+        <div class="bucket-amount">₹${Math.round(b.digital_gold.monthly)}/mo</div>
+      </div>
+      <div class="bucket-desc">${b.digital_gold.description}</div>
+      <div class="bucket-compare">${b.digital_gold.safe_level} · ${b.digital_gold.compare}</div>
+      <div class="growth-row">
+        <div class="growth-pill"><strong>₹${Math.round(b.digital_gold.growth_1yr).toLocaleString('en-IN')}</strong>1 Year</div>
+        <div class="growth-pill"><strong>₹${Math.round(b.digital_gold.growth_3yr).toLocaleString('en-IN')}</strong>3 Years</div>
+      </div>
+    </div>
+    
+    <div class="bucket bucket-emer">
+      <div class="bucket-header">
+        <div class="bucket-name">${b.emergency_cash.emoji} ${b.emergency_cash.name}</div>
+        <div class="bucket-amount">₹${Math.round(b.emergency_cash.monthly)}/mo</div>
+      </div>
+      <div class="bucket-desc">${b.emergency_cash.description}</div>
+      <div class="bucket-compare">${b.emergency_cash.safe_level} · ${b.emergency_cash.compare}</div>
+    </div>
+    
+    <div class="card" style="background:#f0f4ff;border:1px solid #c5cae9">
+      <div style="font-size:0.88rem;color:#1a237e;font-weight:600">🌱 ${visual.metaphor}</div>
+    </div>
+    
+    <button class="btn btn-gold" onclick="showPage('grow')">🌳 Growth Visual देखें</button>
+  `;
+}
+
+// ── RD CALCULATOR ──────────────────────────────────────────────────────────
+async function updateRD() {
+  const monthly = parseInt(document.getElementById('rd-monthly').value);
+  const months  = parseInt(document.getElementById('rd-months').value);
+  document.getElementById('rd-amount-disp').textContent = `₹${monthly}/month · ${months} months`;
+  
+  try {
+    const resp = await fetch(`${API}/api/rd-calculator?monthly=${monthly}&months=${months}`);
+    const data = await resp.json();
+    renderRD(data);
+  } catch(e) {
+    // Calculate offline
+    const invested = monthly * months;
+    const maturity = monthly * months * (1 + (6.5/100) * (months/12) / 2);
+    renderRD({
+      monthly_deposit: monthly, months, rate_percent: 6.5,
+      total_invested: invested, maturity_amount: Math.round(maturity),
+      interest_earned: Math.round(maturity - invested),
+      monthly_growth: Array.from({length:months},(_,i)=>Math.round(monthly*(i+1)*(1+(6.5/100)*((i+1)/12)/2)))
+    });
+  }
+}
+
+function renderRD(data) {
+  document.getElementById('rd-result').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;margin-bottom:12px">
+      <div style="background:#e8f5e9;border-radius:10px;padding:8px">
+        <div style="font-size:1rem;font-weight:800;color:var(--green)">₹${data.total_invested.toLocaleString('en-IN')}</div>
+        <div style="font-size:0.68rem;color:var(--muted)">Invested</div>
+      </div>
+      <div style="background:#fff8e1;border-radius:10px;padding:8px">
+        <div style="font-size:1rem;font-weight:800;color:var(--gold)">₹${data.interest_earned.toLocaleString('en-IN')}</div>
+        <div style="font-size:0.68rem;color:var(--muted)">Interest</div>
+      </div>
+      <div style="background:#e3f2fd;border-radius:10px;padding:8px">
+        <div style="font-size:1rem;font-weight:800;color:#1565c0">₹${data.maturity_amount.toLocaleString('en-IN')}</div>
+        <div style="font-size:0.68rem;color:var(--muted)">Maturity</div>
+      </div>
+    </div>
+  `;
+  
+  const ctx = document.getElementById('rd-chart').getContext('2d');
+  if (state.rdChart) state.rdChart.destroy();
+  state.rdChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.monthly_growth.map((_,i) => `M${i+1}`),
+      datasets: [{
+        label: 'RD Growth (₹)',
+        data: data.monthly_growth,
+        borderColor: '#1a7c4f',
+        backgroundColor: 'rgba(26,124,79,0.12)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 0,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { font: { size: 9 } } },
+        y: { ticks: { font: { size: 9 }, callback: v => '₹'+v.toLocaleString('en-IN') } }
+      }
+    }
+  });
+}
+
+// ── GROW PAGE ──────────────────────────────────────────────────────────────
+function initGrowPage() {
+  updatePlant(6);
+  drawGrowthChart(6);
+}
+
+function updatePlant(months) {
+  months = parseInt(months);
+  document.getElementById('months-label').textContent = months + ' Months';
+  drawPlant(months);
+  drawGrowthChart(months);
+  
+  const monthly = Math.round(state.income * 0.15);
+  const total = monthly * months;
+  document.getElementById('plant-caption').textContent =
+    months <= 3 ? '🌱 अभी बीज है — छोटी शुरुआत!' :
+    months <= 6 ? '🌿 पत्तियाँ निकल रही हैं — growing!' :
+    months <= 12 ? '🌳 अच्छा पेड़ बन रहा है!' : '🌲 मज़बूत पेड़ — financial security!';
+  document.getElementById('plant-sub').textContent =
+    `₹${monthly}/month × ${months} months = ₹${total.toLocaleString('en-IN')} saved`;
+}
+
+function drawPlant(months) {
+  const canvas = document.getElementById('plant-svg-area');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 280, 260);
+  
+  const stage = months <= 2 ? 0 : months <= 5 ? 1 : months <= 11 ? 2 : 3;
+  
+  // Sky gradient
+  const sky = ctx.createLinearGradient(0,0,0,260);
+  sky.addColorStop(0, '#b3e5fc');
+  sky.addColorStop(1, '#e8f5e9');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0,0,280,260);
+  
+  // Ground
+  ctx.fillStyle = '#5d4037';
+  ctx.beginPath();
+  ctx.ellipse(140, 230, 100, 20, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle = '#33691e';
+  ctx.beginPath();
+  ctx.ellipse(140, 225, 100, 14, 0, 0, Math.PI*2);
+  ctx.fill();
+  
+  // Trunk height by stage
+  const trunkH = [20, 50, 90, 130][stage];
+  const trunkW = [5, 8, 12, 16][stage];
+  
+  ctx.fillStyle = '#6d4c41';
+  ctx.beginPath();
+  ctx.roundRect(140 - trunkW/2, 225 - trunkH, trunkW, trunkH, 4);
+  ctx.fill();
+  
+  // Canopy
+  const canopySizes = [[0,0],[30,1],[50,2],[70,3]];
+  if (stage > 0) {
+    const radius = canopySizes[stage][0];
+    const layers = canopySizes[stage][1];
+    const greens = ['#388e3c','#43a047','#66bb6a','#81c784'];
+    for (let l = 0; l <= layers; l++) {
+      ctx.fillStyle = greens[l] || greens[0];
+      ctx.beginPath();
+      ctx.arc(140, 225 - trunkH - radius*0.6 + l*10, radius - l*8, 0, Math.PI*2);
+      ctx.fill();
+    }
+    
+    // Coins as leaves/fruits
+    const coinCount = [0, 3, 8, 15][stage];
+    ctx.fillStyle = '#ffd600';
+    for (let i = 0; i < coinCount; i++) {
+      const angle = (i / coinCount) * Math.PI * 2;
+      const r = radius * 0.65;
+      const cx = 140 + Math.cos(angle) * r;
+      const cy = (225 - trunkH - radius * 0.6) + Math.sin(angle) * r * 0.7;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 6, 0, Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle = '#f57f17';
+      ctx.font = '7px Baloo 2';
+      ctx.textAlign = 'center';
+      ctx.fillText('₹', cx, cy+3);
+      ctx.fillStyle = '#ffd600';
+    }
+  }
+  
+  // Stage label
+  const labels = ['🌱 Seedling', '🌿 Sapling', '🌳 Young Tree', '🌲 Full Tree'];
+  ctx.fillStyle = '#1a7c4f';
+  ctx.font = 'bold 13px Baloo 2';
+  ctx.textAlign = 'center';
+  ctx.fillText(labels[stage], 140, 20);
+}
+
+function drawGrowthChart(months) {
+  const ctx = document.getElementById('growth-chart').getContext('2d');
+  if (state.growthChart) state.growthChart.destroy();
+  
+  const monthlyRD = state.income * 0.10;
+  const monthlyGold = state.income * 0.05;
+  const labels = Array.from({length: months+1}, (_,i) => i === 0 ? 'Start' : `M${i}`);
+  const rdData = labels.map((_,i) => Math.round(monthlyRD * i * (1 + 0.065 * i/24)));
+  const goldData = labels.map((_,i) => Math.round(monthlyGold * i * (1 + 0.08 * i/24)));
+  const totalData = rdData.map((v,i) => v + goldData[i]);
+  
+  state.growthChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Total Growth', data: totalData, borderColor: '#1a7c4f', backgroundColor: 'rgba(26,124,79,0.15)', fill: true, tension: 0.4, pointRadius: 0 },
+        { label: 'RD', data: rdData, borderColor: '#2196f3', backgroundColor: 'transparent', tension: 0.4, pointRadius: 0, borderDash: [4,3] },
+        { label: 'Gold', data: goldData, borderColor: '#ffa000', backgroundColor: 'transparent', tension: 0.4, pointRadius: 0, borderDash: [4,3] },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { labels: { font: { size: 10 }, boxWidth: 12 } } },
+      scales: {
+        x: { ticks: { font: { size: 9 } } },
+        y: { ticks: { font: { size: 9 }, callback: v => '₹'+v.toLocaleString('en-IN') } }
+      }
+    }
+  });
+}
+
+// ── MARKET ─────────────────────────────────────────────────────────────────
+async function loadMarket() {
+  document.getElementById('market-loading').style.display = 'block';
+  document.getElementById('market-cards').innerHTML = '';
+  document.getElementById('market-chart-wrap').style.display = 'none';
+  
+  try {
+    const resp = await fetch(`${API}/api/market-data`);
+    const json = await resp.json();
+    renderMarket(json.data);
+  } catch(e) {
+    renderMarket(mockMarket());
+    toast("Demo mode — market data");
+  } finally {
+    document.getElementById('market-loading').style.display = 'none';
+  }
+}
+
+function mockMarket() {
+  return {
+    "Gold (GOLDBEES)": { current: 5820.50, change_1month_pct: 2.3, trend:"up", history:[5650,5670,5690,5710,5720,5740,5760,5780,5800,5810,5815,5820] },
+    "Nifty 50 Index": { current: 22350.75, change_1month_pct: 1.8, trend:"up", history:[21900,21950,22000,22050,22100,22150,22200,22250,22300,22350] },
+    "SBI Bank": { current: 785.30, change_1month_pct: -0.5, trend:"down", history:[790,789,788,787,786,785,786,785,784,785] }
+  };
+}
+
+function renderMarket(data) {
+  const container = document.getElementById('market-cards');
+  const simpleDesc = {
+    "Gold (GOLDBEES)": "सोना — सबसे safe investment 🥇",
+    "Nifty 50 Index": "India की top 50 companies 🇮🇳",
+    "SBI Bank": "State Bank stock — like owning part of SBI 🏦"
+  };
+  
+  container.innerHTML = Object.entries(data).map(([name, d]) => `
+    <div class="market-card">
+      <div>
+        <div class="market-name">${name}</div>
+        <div style="font-size:0.72rem;color:var(--muted)">${simpleDesc[name]||''}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="market-price">₹${d.current.toLocaleString('en-IN')}</div>
+        <div class="market-change ${d.trend}">${d.trend==='up'?'▲':'▼'} ${Math.abs(d.change_1month_pct)}% (1M)</div>
+      </div>
+    </div>
+  `).join('');
+  
+  // Gold chart
+  const goldKey = Object.keys(data).find(k => k.toLowerCase().includes('gold'));
+  if (goldKey && data[goldKey].history) {
+    const ctx = document.getElementById('gold-chart').getContext('2d');
+    if (state.goldChart) state.goldChart.destroy();
+    state.goldChart = new Chart(ctx, {
+      type:'line',
+      data: {
+        labels: data[goldKey].history.map((_,i) => `Day ${i+1}`),
+        datasets: [{
+          label: 'Gold Price (₹)',
+          data: data[goldKey].history,
+          borderColor: '#ffa000',
+          backgroundColor: 'rgba(255,160,0,0.12)',
+          fill: true, tension: 0.4, pointRadius: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { font: { size: 8 }, maxTicksLimit: 8 } },
+          y: { ticks: { font: { size: 9 }, callback: v => '₹'+v } }
+        }
+      }
+    });
+    document.getElementById('market-chart-wrap').style.display = 'block';
+  }
+}
+
+async function simulateUPI() {
+  const amount = document.getElementById('upi-amount').value;
+  const purpose = document.getElementById('upi-purpose').value;
+  
+  try {
+    const resp = await fetch(`${API}/api/simulate-upi`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({amount, purpose})
+    });
+    const data = await resp.json();
+    document.getElementById('upi-msg').textContent = `₹${amount} → ${purpose} — SUCCESS! 🎉`;
+    document.getElementById('upi-txn').textContent = data.transaction_id || 'TXN' + Math.floor(Math.random()*999999);
+  } catch(e) {
+    document.getElementById('upi-msg').textContent = `₹${amount} → ${purpose} — SUCCESS! (Demo)`;
+    document.getElementById('upi-txn').textContent = 'TXN' + Math.floor(Math.random()*999999);
+  }
+  document.getElementById('upi-success').style.display = 'block';
+  toast("Demo payment successful! 💰");
+}
+
+// ── LEARN CHART ─────────────────────────────────────────────────────────────
+function initLearnChart() {
+  const ctx = document.getElementById('learn-chart').getContext('2d');
+  if (state.learnChart) state.learnChart.destroy();
+  
+  const months = Array.from({length:121},(_,i)=>i);
+  const labels = months.map(m => m%12===0 ? `Yr ${m/12}` : '');
+  
+  const rd = months.map(m => Math.round(500 * m * (1 + 0.065 * m/24)));
+  const gold = months.map(m => Math.round(500 * m * (1 + 0.08 * m/24)));
+  const index = months.map(m => Math.round(500 * m * Math.pow(1 + 0.01, m)));
+  
+  state.learnChart = new Chart(ctx, {
+    type:'line',
+    data: {
+      labels,
+      datasets: [
+        { label:'RD (6.5%)', data:rd, borderColor:'#1a7c4f', tension:0.4, pointRadius:0 },
+        { label:'Digital Gold (8%)', data:gold, borderColor:'#ffa000', tension:0.4, pointRadius:0 },
+        { label:'Index Fund (12%)', data:index, borderColor:'#1565c0', tension:0.4, pointRadius:0 },
+      ]
+    },
+    options: {
+      responsive:true,
+      plugins: { legend: { labels: { font:{size:9}, boxWidth:12 } } },
+      scales: {
+        x: { ticks: { font:{size:8}, maxRotation:0 } },
+        y: { ticks: { font:{size:9}, callback: v => '₹'+Math.round(v/1000)+'K' } }
+      }
+    }
+  });
+}
+
+
+// ── GAN IMAGE GENERATION ────────────────────────────────────────────────────
+async function generateGANImage() {
+  const months  = parseInt(document.getElementById('grow-months').value) || 6;
+  const monthly = Math.round(state.income * 0.15);
+
+  document.getElementById('plant-svg-area').style.display = 'none';
+  document.getElementById('gan-image').style.display = 'none';
+  document.getElementById('gan-spinner').style.display = 'block';
+  document.getElementById('gan-method-badge').textContent = '';
+
+  try {
+    const resp = await fetch(`${API}/api/generate-visual`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ profession: state.profession, months, monthly_savings: monthly })
+    });
+    const data = await resp.json();
+
+    if (data.success && data.image_base64) {
+      const img = document.getElementById('gan-image');
+      img.src = `data:image/png;base64,${data.image_base64}`;
+      img.style.display = 'block';
+      document.getElementById('plant-svg-area').style.display = 'none';
+      const methodLabels = {
+        'stable_diffusion': '✨ Generated by Stable Diffusion GAN (GPU)',
+        'cached_gan':       '✨ Stable Diffusion GAN (pre-cached)',
+        'pil_fallback':     '🖼️ AI-drawn fallback (no GPU)'
+      };
+      document.getElementById('gan-method-badge').textContent = methodLabels[data.method] || '🎨 AI Generated';
+      if (data.metaphor) document.getElementById('plant-sub').textContent = data.metaphor;
+      toast('🎨 AI image ready!');
+    } else { throw new Error('No image'); }
+  } catch (e) {
+    document.getElementById('plant-svg-area').style.display = 'block';
+    document.getElementById('gan-method-badge').textContent = '⚡ Canvas fallback (server offline)';
+    toast('Demo mode — canvas visual');
+  } finally {
+    document.getElementById('gan-spinner').style.display = 'none';
+  }
+}
+
+
+// ── RAG CHAT ────────────────────────────────────────────────────────────────
+function askQuick(q) {
+  document.getElementById('chat-input').value = q;
+  sendChat();
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const question = input.value.trim();
+  if (!question) return;
+  input.value = '';
+  addChatMsg(question, 'user');
+  const tid = 'typ' + Date.now();
+  addTyping(tid);
+  try {
+    const r = await fetch(`${API}/api/ask`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        question, profession: state.profession,
+        income: state.income, expenses: state.expenses
+      })
+    });
+    const d = await r.json();
+    removeTyping(tid);
+    addChatMsg(d.answer, 'bot', d.sources || []);
+  } catch(e) {
+    removeTyping(tid);
+    addChatMsg('Server se connect nahi hua. Check karo app.py chal raha hai kya. 🙏', 'bot');
+  }
+}
+
+function addChatMsg(text, role, sources=[]) {
+  const c = document.getElementById('chat-messages');
+  const d = document.createElement('div');
+  d.className = `chat-msg ${role==='bot'?'bot-msg':'user-msg'}`;
+  const src = sources.length ? '<div>' + sources.map(s=>`<span class="source-chip">📚 ${s}</span>`).join('') + '</div>' : '';
+  d.innerHTML = `<div class="msg-avatar">${role==='bot'?'🤖':'👤'}</div><div class="msg-bubble">${text.replace(/\n/g,'<br/>')}${src}</div>`;
+  c.appendChild(d);
+  d.scrollIntoView({behavior:'smooth'});
+}
+
+function addTyping(id) {
+  const c = document.getElementById('chat-messages');
+  const d = document.createElement('div');
+  d.id = id; d.className = 'chat-msg bot-msg';
+  d.innerHTML = '<div class="msg-avatar">🤖</div><div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+  c.appendChild(d); d.scrollIntoView({behavior:'smooth'});
+}
+
+function removeTyping(id) { const e=document.getElementById(id); if(e) e.remove(); }
+
+// ── MANUAL EXPENSE ENTRY ────────────────────────────────────────────────────
+async function addManualExpense() {
+  const category = document.getElementById('manual-category').value;
+  const amount = parseFloat(document.getElementById('manual-amount').value);
+  const description = document.getElementById('manual-description').value.trim();
+
+  if (!amount || amount <= 0) {
+    toast('❌ Please enter a valid amount!');
+    return;
+  }
+
+  const resultDiv = document.getElementById('manual-result');
+  resultDiv.style.display = 'none';
+
+  try {
+    // Call agentic API to process the manual expense
+    //const userId = state.name || 'user_' + Date.now();
+    const userId = state.name || document.getElementById("user-name").value || 'user_default';
+    const whatsappNumber = localStorage.getItem('whatsappNumber');
+    
+    const billText = `${category} | Amount: ${amount} | ${description}`;
+    
+    const resp = await fetch(`${API}/api/agentic/process-bill`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: userId,
+        bill_text: billText,
+        monthly_income: state.income || 15000,
+        phone_number: whatsappNumber
+      })
+    });
+
+    const data = await resp.json();
+
+    if (data.success) {
+      // Show success result
+      const summary = document.getElementById('manual-summary');
+      summary.innerHTML = `
+        <strong>${category}</strong> में ₹${amount.toLocaleString('en-IN')} add किया गया<br>
+        ${description ? `<em>${description}</em>` : ''}
+      `;
+
+      // Show insights/alerts
+      const alertDiv = document.getElementById('manual-alert');
+      const insights = data.summary.insights || [];
+      const alertsSent = data.summary.alerts_sent || 0;
+
+      if (alertsSent > 0) {
+        alertDiv.style.background = '#fff3cd';
+        alertDiv.style.color = '#856404';
+        alertDiv.innerHTML = '⚠️ <strong>Budget Alert Sent!</strong><br>' + insights.join('<br>');
+      } else if (insights.length > 0) {
+        alertDiv.style.background = '#d4edda';
+        alertDiv.style.color = '#155724';
+        alertDiv.innerHTML = '💡 ' + insights.join('<br>');
+      } else {
+        alertDiv.style.display = 'none';
+      }
+
+      resultDiv.style.display = 'block';
+      
+      // Clear form
+      document.getElementById('manual-amount').value = '';
+      document.getElementById('manual-description').value = '';
+
+      // Show toast
+      toast(`✅ Expense added! ${alertsSent > 0 ? 'Alert sent on WhatsApp!' : ''}`);
+
+      // Scroll to result
+      resultDiv.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      toast('❌ Error adding expense. Try again!');
+    }
+  } catch (error) {
+    console.error('Manual expense error:', error);
+    toast('❌ Server error. Check console for details.');
+  }
+}
+
+// ── WHATSAPP SETUP ──────────────────────────────────────────────────────────
+function saveWhatsAppNumber() {
+  const numberInput = document.getElementById('whatsapp-number').value.trim();
+  
+  if (!numberInput) {
+    toast('❌ Please enter your WhatsApp number!');
+    return;
+  }
+
+  // Validate 10-digit number
+  if (!/^\d{10}$/.test(numberInput)) {
+    toast('❌ Invalid number! Enter 10 digits only.');
+    return;
+  }
+
+  // Format as whatsapp:+91XXXXXXXXXX
+  const formattedNumber = `whatsapp:+91${numberInput}`;
+  
+  // Save to localStorage
+  localStorage.setItem('whatsappNumber', formattedNumber);
+  
+  // Show status
+  const statusDiv = document.getElementById('whatsapp-status');
+  statusDiv.style.display = 'block';
+  statusDiv.style.background = '#d4edda';
+  statusDiv.style.color = '#155724';
+  statusDiv.innerHTML = `
+    ✅ <strong>WhatsApp Number Saved!</strong><br>
+    📱 ${formattedNumber}<br>
+    <small>You'll receive alerts when budget is exceeded.</small>
+  `;
+  
+  toast('✅ WhatsApp number saved successfully!');
+}
+
+// Load WhatsApp number on page load if exists
+function loadWhatsAppNumber() {
+  const saved = localStorage.getItem('whatsappNumber');
+  if (saved) {
+    // Extract the 10-digit number
+    const match = saved.match(/\+91(\d{10})/);
+    if (match) {
+      document.getElementById('whatsapp-number').value = match[1];
+      
+      const statusDiv = document.getElementById('whatsapp-status');
+      statusDiv.style.display = 'block';
+      statusDiv.style.background = '#d1ecf1';
+      statusDiv.style.color = '#0c5460';
+      statusDiv.innerHTML = `
+        ℹ️ Saved: ${saved}<br>
+        <small>Alerts will be sent to this number.</small>
+      `;
+    }
+  }
+}
+
+// ── INIT ────────────────────────────────────────────────────────────────────
+window.onload = () => {
+  updateRD();
+  loadWhatsAppNumber(); // Load saved WhatsApp number
+  // Service worker for offline
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  }
+};
+</script>
+<script>
+async function saveWhatsAppNumber() {
+  const userId = (typeof state !== 'undefined' && state.name) 
+                 ? state.name 
+                 : document.getElementById("user-name").value;
+
+  const number = document.getElementById("whatsapp-number").value;
+
+  if (!number || number.length !== 10) {
+    alert("Enter valid 10 digit number");
+    return;
+  }
+
+  const fullNumber = "+91" + number;
+
+  try {
+    const res = await fetch("/api/agentic/save-whatsapp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        phone_number: fullNumber
+      })
+    });
+
+    const data = await res.json();
+
+    const status = document.getElementById("whatsapp-status");
+    status.style.display = "block";
+    status.style.background = "#e8f5e9";
+    status.innerText = "✅ Saved: " + fullNumber;
+
+  } catch (err) {
+    alert("Failed to save number");
+  }
+}
+</script>
+</body>
+</html>

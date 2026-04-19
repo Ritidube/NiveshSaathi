@@ -1,0 +1,39 @@
+# NiveshSaathi — Requirements
+# Python 3.11 | Clean install tested
+
+# ── Core API ──────────────────────────────────────────────────────────────────
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.7
+
+# ── Environment variables ─────────────────────────────────────────────────────
+python-dotenv==1.0.1
+
+# ── Numpy — 1.26.4 required by chromadb + easyocr ────────────────────────────
+numpy==1.26.4
+
+# ── OCR — opencv 4.9.x works with numpy 1.x ──────────────────────────────────
+easyocr==1.7.1
+opencv-python==4.9.0.80
+
+# ── Image processing ──────────────────────────────────────────────────────────
+Pillow==10.2.0
+
+# ── ML ────────────────────────────────────────────────────────────────────────
+scikit-learn==1.3.2
+
+# ── Market data ───────────────────────────────────────────────────────────────
+yfinance==0.2.36
+
+# ── HTTP ──────────────────────────────────────────────────────────────────────
+requests==2.31.0
+
+# ── RAG ───────────────────────────────────────────────────────────────────────
+chromadb==0.5.23
+tokenizers==0.20.3
+sentence-transformers==2.3.1
+
+# ── WhatsApp alerts ───────────────────────────────────────────────────────────
+twilio==8.10.0
+
+# NOTE: torch/diffusers/transformers removed — GAN uses cached PNGs in static/gan_cache/
