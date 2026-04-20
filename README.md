@@ -27,6 +27,8 @@ No jargon. No complicated forms. Just simple Hindi guidance, like a friend who h
 
 [▶️ Watch the Demo](https://drive.google.com/file/d/1-uVGzw_dZfFTQp8whfjcU-EQU4XxI84z/view?usp=sharing)
 ---
+## 🔗 View PPT
+ https://docs.google.com/presentation/d/1CjVhU-KX8EM9y6oMPhk-9BUgpZjdJPzb/edit?usp=sharing
 
 ## 🎯 What This App Does
 
